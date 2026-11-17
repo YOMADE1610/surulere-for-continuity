@@ -286,6 +286,10 @@ input,textarea,select{background:#071a30!important;color:#fff!important;border:1
 @media(max-width:700px){.top{gap:9px;padding-left:12px;padding-right:12px}.logo.apc-mark{width:49px;height:49px;min-width:49px}.brand b{letter-spacing:.06em!important}.hero{padding:28px 0 46px!important}.hero .wrap{grid-template-columns:1fr!important}.portrait{max-width:100%!important}.portrait .ph{height:clamp(390px,118vw,560px)!important}.campaign-title{font-size:clamp(34px,10vw,58px)!important}.hero-masthead{padding-left:12px;padding-right:12px}.pills{padding-left:12px;padding-right:12px}}
 
 .mobilise-copy{margin:22px 0 24px;padding:20px 22px;border-left:3px solid var(--em);background:rgba(255,255,255,.055);border-radius:0 14px 14px 0;max-width:650px}.mobilise-copy p{margin:0 0 12px;line-height:1.55;color:var(--mute);font-size:clamp(15px,2vw,18px)}.mobilise-copy p:last-child{margin-bottom:0}.mobilise-copy .mobilise-lead{font-size:clamp(20px,3vw,27px);font-weight:800;color:#fff}.mobilise-copy .mobilise-call{font-weight:800;color:#fff}.mobilise-copy .mobilise-close{font-weight:700;color:#d9c18a}.hero .btn.b1{font-weight:900;letter-spacing:.06em;padding:14px 25px}
+
+/* Reliability fix: content must remain visible even if scroll observers are delayed or unavailable. */
+.reveal{opacity:1!important;transform:none!important;visibility:visible!important}
+.reveal.visible{opacity:1!important;transform:none!important;visibility:visible!important}
 </style>
 </head>
 <body>

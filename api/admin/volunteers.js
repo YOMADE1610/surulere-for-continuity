@@ -33,7 +33,7 @@ module.exports = async function handler(req, res) {
     const filtered = q ? rows.filter(r => [r.registration_number,r.first_name,r.last_name,r.phone,r.email,r.ward].some(v => String(v || "").toLowerCase().includes(q))) : rows;
     if (req.query.format === "csv") {
       const headers = ["Registration Number","First Name","Last Name","Phone","Email","Ward","Registered At"];
-      const lines = [headers, ...filtered.map(r => [r.registration_number,r.first_name,r.last_name,r.phone,r.email,r.ward,r.created_at])].map(row => row.map(csvCell).join(","));
+      const lines = [headers, ...filtered.map(r => ["\\t" + String(r.registration_number || ""),r.first_name,r.last_name,r.phone,r.email,r.ward,r.created_at])].map(row => row.map(csvCell).join(","));
       res.setHeader("Content-Type", "text/csv; charset=utf-8");
       res.setHeader("Content-Disposition", 'attachment; filename="surulere-volunteer-register.csv"');
       return res.status(200).send("\uFEFF" + lines.join("\r\n"));

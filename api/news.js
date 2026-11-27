@@ -38,11 +38,11 @@ module.exports = async function handler(req,res) {
       for(const item of items){
         scanned++;
         const title=tag(item,"title"), link=tag(item,"link"), desc=tag(item,"description");
-        const sourceMatch=item.match(/<source\\b[^>]*>([\\s\\S]*?)<\\/source>/i);
+        const sourceMatch=item.match(/<source\b[^>]*>([\s\S]*?)<\/source>/i);
         const sourceName=sourceMatch?esc(sourceMatch[1]):"Google News";
-        const sourceHrefMatch=item.match(/<source\\b[^>]*\\burl=["']([^"']+)["']/i);
+        const sourceHrefMatch=item.match(/<source\b[^>]*\burl=["']([^"']+)["']/i);
         let publisherHost=host;
-        try{if(sourceHrefMatch)publisherHost=new URL(sourceHrefMatch[1]).hostname.replace(/^www\\./,"");}catch(_){}
+        try{if(sourceHrefMatch)publisherHost=new URL(sourceHrefMatch[1]).hostname.replace(/^www\./,"");}catch(_){}
         const trustedDomain=TRUSTED.some(d=>publisherHost===d||publisherHost.endsWith("."+d));
         const trustedName=/state house|punch|the cable|guardian|vanguard|channels television|premium times|thisday|businessday|radio nigeria lagos|rhythm|the nation|daily trust|blueprint/i.test(sourceName);
         const trusted=trustedDomain||trustedName;

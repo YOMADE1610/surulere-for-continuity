@@ -37,7 +37,10 @@ module.exports = async function handler(req,res) {
       const items=[...xml.matchAll(/<item>([\s\S]*?)<\/item>/gi)].map(m=>m[1]);
       for(const item of items){
         scanned++;
-        const title=tag(item,"title"), link=tag(item,"link"), desc=tag(item,"description"), source=tag(item,"source")||"Google News";
+        const title=tag(item,"title"), link=tag(item,"link"), desc=tag(item,"description");
+        const sourceMatch=item.match(/<source\\b[^>]*url=["']([^"']+)["'][^>]*>([\\s\\S]*?)<\\/source>/i);
+        const source=sourceMatch?esc(sourceMatch[2]):"Google News";
+        const publisherUrl=sourceMatch?sourceMatch[1]:link;
         if(!title||!/^https:\/\//i.test(link)) continue;
         let host=""; try{host=new URL(link).hostname.replace(/^www\./,"");}catch(_){continue;}
         const trusted=TRUSTED.some(d=>host===d||host.endsWith("."+d));

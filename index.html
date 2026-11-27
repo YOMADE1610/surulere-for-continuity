@@ -387,14 +387,30 @@ $("grid").onclick=function(e){var b=e.target.closest("[data-record]");if(!b)retu
 $("px").onclick=function(){$("pd").close()};
 chips();draw();["cnt1","cnt2","cnt3"].forEach(function(i){if($(i))$(i).textContent=P.length});
 
-var N=[
-["Education · 5 Mar 2026","8,000 students receive learning materials","Radio Nigeria Lagos reported that educational materials were distributed across 23 Surulere secondary schools. This is a reported programme, not an independently audited beneficiary count.","https://radionigerialagos.gov.ng/gbajabiamila-empowers-8000-surulere-students-with-learning-materials/"],
-["Education · 22 Oct 2025","Femi Gbajabiamila Junior Secondary School inaugurated","Punch reported the inauguration of a new public junior secondary school in Itire-Ikate LCDA.","https://punchng.com/gbajabiamila-inaugurates-public-school-in-lagos-community/"],
-["Presidential service · 15 Oct 2026","National Policing Bill working group reports progress","The State House reported that the Presidential Working Group chaired by Gbajabiamila said the bill was about 90% ready for transmission to the National Assembly. This is a national policy assignment, not a Surulere constituency project.","https://statehouse.gov.ng/national-policing-bill-90-percent-ready-for-transmission-to-national-assembly-gbajabiamila/"],
-["Healthcare · 14 Sep 2026","Lagos health commission inspects Surulere hospitals","Punch reported inspections at Randle General Hospital, Maternal and Child Centre, Gbaja, and Femi Gbajabiamila General Hospital, Iyun, including ongoing reconstruction and expansion works.","https://punchng.com/lagos-seeks-improved-service-delivery-after-hospital-assessment/"],
-["Constituency update · 16 Feb 2026","Laguda outlines current Surulere interventions","Vanguard reported the current federal representative's account of scholarships, school support, infrastructure, transformers, solar lights and a CBT/ICT centre. These are attributed to Fuad Kayode Laguda's office, not added to Gbajabiamila's 264-record register.","https://www.vanguardngr.com/2026/02/laguda-marks-2-years-in-reps-highlights-scholarships-infrastructure-empowerment-projects-in-surulere/"],
-["Recognition · 14 Nov 2026","Gbajabiamila nominated for Silverbird empowerment recognition","Rhythm FM reported his nomination for the Special Recognition Award for Empowerment at the 2026 Silverbird Man of the Year Awards. This is an award nomination, not a project-delivery record.","https://rhythm937.com/gbajabiamila-nominated-for-silverbird-special-recognition-award-for-empowerment/"]];
-$("ng").innerHTML=N.map(function(n){return '<div class="pc"><div class="top2">'+n[0]+'</div><div class="in"><h3>'+n[1]+'</h3><p>'+n[2]+'</p><p><a href="'+n[3]+'" target="_blank" rel="noopener">Read source →</a></p></div></div>'}).join("");
+async function loadNews(){
+ const root=$("ng"); if(!root)return;
+ root.textContent="Loading the latest reports…";
+ try{
+  const response=await fetch("/api/news",{headers:{"Accept":"application/json"},cache:"no-store"});
+  const data=await response.json(); if(!response.ok)throw new Error(data.error||"News unavailable");
+  const articles=Array.isArray(data.articles)?data.articles:[];
+  root.replaceChildren();
+  if(!articles.length){root.textContent="No new verified reports are available yet. Please check back shortly.";return;}
+  articles.forEach(function(a){
+   const card=document.createElement("div");card.className="pc";
+   const top=document.createElement("div");top.className="top2";
+   const date=a.published_at?new Date(a.published_at):null;
+   top.textContent=(a.source_name||"News report")+" · "+(date&&!isNaN(date)?date.toLocaleDateString("en-NG",{day:"numeric",month:"short",year:"numeric"}):"Latest");
+   const inside=document.createElement("div");inside.className="in";
+   const heading=document.createElement("h3");heading.textContent=a.title||"News update";
+   const summary=document.createElement("p");summary.textContent=a.summary||"Open the original report for details.";
+   const linkLine=document.createElement("p");const link=document.createElement("a");
+   link.href=a.source_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Read original report →";
+   linkLine.appendChild(link);inside.append(heading,summary,linkLine);card.append(top,inside);root.appendChild(card);
+  });
+ }catch(e){root.textContent="News updates are temporarily unavailable. The next scheduled refresh will retry automatically.";}
+}
+loadNews();
 var M=[["2003","Enters the House of Representatives","Elected to Surulere Federal Constituency I and returned for multiple terms."],
 ["2017","Jobs, ambulances and student loans","Surulere Job Fair, five ambulances, and sponsorship of the Interest-Free Student Loans Bill."],
 ["2019","Becomes Speaker","Leads the 9th National Assembly and delivers 137 constituency projects in his first stretch."],

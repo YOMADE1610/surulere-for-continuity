@@ -38,16 +38,11 @@ module.exports = async function handler(req,res) {
       for(const item of items){
         scanned++;
         const title=tag(item,"title"), link=tag(item,"link"), desc=tag(item,"description");
-        const sourceMatch=item.match(/<source\\b[^>]*url=["']([^"']+)["'][^>]*>([\\s\\S]*?)<\\/source>/i);
-        const source=sourceMatch?esc(sourceMatch[2]):"Google News";
-        const publisherUrl=sourceMatch?sourceMatch[1]:link;
-        if(!title||!/^https:\/\//i.test(link)) continue;
-        let host=""; try{host=new URL(link).hostname.replace(/^www\./,"");}catch(_){continue;}
-        const sourceTag=item.match(/<source([^>]*)>([\\s\\S]*?)<\\/source>/i);
-        const sourceName=esc(sourceTag?.[2]||source);
-        const sourceHref=(sourceTag?.[1]||"").match(/url=["']([^"']+)["']/i)?.[1]||"";
+        const sourceMatch=item.match(/<source\\b[^>]*>([\\s\\S]*?)<\\/source>/i);
+        const sourceName=sourceMatch?esc(sourceMatch[1]):"Google News";
+        const sourceHrefMatch=item.match(/<source\\b[^>]*\\burl=["']([^"']+)["']/i);
         let publisherHost=host;
-        try{if(sourceHref)publisherHost=new URL(sourceHref).hostname.replace(/^www\\./,"");}catch(_){}
+        try{if(sourceHrefMatch)publisherHost=new URL(sourceHrefMatch[1]).hostname.replace(/^www\\./,"");}catch(_){}
         const trustedDomain=TRUSTED.some(d=>publisherHost===d||publisherHost.endsWith("."+d));
         const trustedName=/state house|punch|the cable|guardian|vanguard|channels television|premium times|thisday|businessday|radio nigeria lagos|rhythm|the nation|daily trust|blueprint/i.test(sourceName);
         const trusted=trustedDomain||trustedName;

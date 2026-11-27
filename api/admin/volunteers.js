@@ -16,7 +16,7 @@ function authorized(req) {
 function csvRegistrationCell(value) {
   const s = String(value == null ? "" : value);
   // IDs are generated digits only; this Excel/Sheets text formula preserves leading zeros.
-  return /^\d{6}$/.test(s) ? '="' + s + '"' : csvCell(s);
+  return /^\d{6}$/.test(s) ? '"=""' + s + '"""' : csvCell(s);
 }
 function csvCell(value) {
   let s = String(value == null ? "" : value);
@@ -38,7 +38,7 @@ module.exports = async function handler(req, res) {
     const filtered = q ? rows.filter(r => [r.registration_number,r.first_name,r.last_name,r.phone,r.email,r.ward].some(v => String(v || "").toLowerCase().includes(q))) : rows;
     if (req.query.format === "csv") {
       const headers = ["Registration Number","First Name","Last Name","Phone","Email","Ward","Registered At"];
-      const lines = [headers, ...filtered.map(r => [csvRegistrationCell(r.registration_number),r.first_name,r.last_name,r.phone,r.email,r.ward,r.created_at])].map(row => row.map(csvCell).join(","));
+      const lines = [headers, ...filtered.map(r => [csvRegistrationCell(r.registration_number),r.first_name,r.last_name,r.phone,r.email,r.ward,r.created_at])].map(row => row.map((cell, index) => index === 0 ? cell : csvCell(cell)).join(","));
       res.setHeader("Content-Type", "text/csv; charset=utf-8");
       res.setHeader("Content-Disposition", 'attachment; filename="surulere-volunteer-register.csv"');
       return res.status(200).send("\uFEFF" + lines.join("\r\n"));

@@ -43,10 +43,17 @@ module.exports = async function handler(req,res) {
         const publisherUrl=sourceMatch?sourceMatch[1]:link;
         if(!title||!/^https:\/\//i.test(link)) continue;
         let host=""; try{host=new URL(link).hostname.replace(/^www\./,"");}catch(_){continue;}
-        const trusted=TRUSTED.some(d=>host===d||host.endsWith("."+d));
+        const sourceTag=item.match(/<source([^>]*)>([\\s\\S]*?)<\\/source>/i);
+        const sourceName=esc(sourceTag?.[2]||source);
+        const sourceHref=(sourceTag?.[1]||"").match(/url=["']([^"']+)["']/i)?.[1]||"";
+        let publisherHost=host;
+        try{if(sourceHref)publisherHost=new URL(sourceHref).hostname.replace(/^www\\./,"");}catch(_){}
+        const trustedDomain=TRUSTED.some(d=>publisherHost===d||publisherHost.endsWith("."+d));
+        const trustedName=/state house|punch|the cable|guardian|vanguard|channels television|premium times|thisday|businessday|radio nigeria lagos|rhythm|the nation|daily trust|blueprint/i.test(sourceName);
+        const trusted=trustedDomain||trustedName;
         const date=Date.parse(tag(item,"pubDate"))||Date.now();
         const cleanSummary=desc.slice(0,700)||"Open the original report for details.";
-        const payload={title,summary:cleanSummary,source_name:source,source_url:link,published_at:new Date(date).toISOString(),topic:term,status:trusted?"published":"review"};
+        const payload={title,summary:cleanSummary,source_name:sourceName,source_url:link,published_at:new Date(date).toISOString(),topic:term,status:trusted?"published":"review"};
         const save=await fetch(base.replace(/\/$/,"")+"/rest/v1/news_articles?on_conflict=source_url",{method:"POST",headers:{...headers,Prefer:"resolution=ignore-duplicates,return=minimal"},body:JSON.stringify(payload)});
         if(save.ok){if(trusted)added++;else reviewed++;}
       }

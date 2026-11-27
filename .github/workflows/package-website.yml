@@ -1,0 +1,28 @@
+name: Package website ZIP
+
+on:
+  push:
+    branches:
+      - ui/registration-counter
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Create deployment ZIP
+        run: |
+          zip -r surulere-for-continuity-ready-to-deploy.zip \
+            index.html index-5.html admin.html api README.md DEPLOYMENT-GUIDE.md .env.example
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: surulere-for-continuity-ready-to-deploy
+          path: surulere-for-continuity-ready-to-deploy.zip
+          if-no-files-found: error
+          retention-days: 14

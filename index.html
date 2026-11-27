@@ -290,6 +290,19 @@ input,textarea,select{background:#071a30!important;color:#fff!important;border:1
 /* Reliability fix: content must remain visible even if scroll observers are delayed or unavailable. */
 .reveal{opacity:1!important;transform:none!important;visibility:visible!important}
 .reveal.visible{opacity:1!important;transform:none!important;visibility:visible!important}
+
+/* Live registration counter: retain the campaign navy and SURULERE 2027 green. */
+#join.cta{background:var(--navy)!important;color:var(--ink);padding:42px 0 48px;border-top:1px solid var(--line)}
+#join.cta h2{color:#fff}
+#join.cta> .wrap>p:not(.counter-note){color:var(--mute)}
+#join .registration-counter{width:min(100%,640px);margin:24px auto 0;padding:16px 20px 18px;border:2px solid #49d99a;border-radius:22px;background:#062d26;color:#fff;box-shadow:none}
+#join .counter-title{display:block;color:#fff;font-family:inherit;font-size:clamp(18px,3vw,22px);font-weight:750;line-height:1.25}
+#join .counter-value{display:block;margin:5px 0 0;color:#49d99a;font-family:inherit;font-size:clamp(42px,7vw,58px);font-weight:850;letter-spacing:.035em;line-height:1.08;font-variant-numeric:tabular-nums}
+#join .counter-rule{display:block;width:min(88%,480px);height:2px;margin:10px auto 9px;background:#49d99a}
+#join .counter-caption{display:block;color:#fff;font-family:inherit;font-size:clamp(15px,2.4vw,19px);font-weight:700;line-height:1.3}
+#join .counter-note{margin:9px auto 0;color:var(--mute);font-size:12px}
+#join #volunteer-count[data-unavailable="true"] .counter-value{font-size:clamp(22px,4vw,30px);letter-spacing:0}
+@media(max-width:600px){#join.cta{padding:34px 0 40px}#join .registration-counter{padding:15px 14px 16px;border-radius:18px}#join .counter-value{font-size:clamp(40px,12vw,52px)}}
 </style>
 </head>
 <body>
@@ -354,7 +367,13 @@ input,textarea,select{background:#071a30!important;color:#fff!important;border:1
 <h2>Join Surulere for Continuity and Sustainability.</h2>
 <p>Register to volunteer and receive campaign activity updates.</p>
 <a class="btn b1" href="https://www.inecnigeria.org" rel="noopener">Check INEC voter info</a><a class="btn b2" href="#library">Explore Projects &amp; Public Service Register</a>
-<p id="volunteer-count" style="margin-top:14px;font-size:14px;font-weight:700" aria-live="polite">Loading verified volunteer registrations…</p><p style="margin-top:8px;font-size:13px">Your details are recorded directly in the volunteer register.</p>
+<div id="volunteer-count" class="registration-counter" role="status" aria-live="polite" aria-atomic="true">
+  <span class="counter-title">Current Registration Count</span>
+  <strong id="volunteer-count-value" class="counter-value">—</strong>
+  <span class="counter-rule" aria-hidden="true"></span>
+  <span class="counter-caption">Volunteers Registered</span>
+</div>
+<p class="counter-note">Live total from the volunteer register.</p><p style="margin-top:8px;font-size:13px">Your details are recorded directly in the volunteer register.</p>
 </div></div>
 
 </div>
@@ -423,9 +442,19 @@ $("jx").onclick=$("jc").onclick=function(){$("jd").close()};
 
 
 async function refreshVolunteerCount(){
- var el=$("volunteer-count"); if(!el)return;
- try{var r=await fetch("/api/count",{headers:{"Accept":"application/json"},cache:"no-store"});var j=await r.json();if(!r.ok)throw new Error(j.error||"Count unavailable");el.textContent=Number(j.count).toLocaleString()+" verified volunteer registration"+(Number(j.count)===1?"":"s");}
- catch(e){el.textContent="Volunteer registration count temporarily unavailable.";}
+ var el=$("volunteer-count-value"); if(!el)return;
+ try{
+  var r=await fetch("/api/count",{headers:{"Accept":"application/json"},cache:"no-store"});
+  var j=await r.json();
+  if(!r.ok)throw new Error(j.error||"Count unavailable");
+  var count=Number(j.count);
+  if(!Number.isFinite(count)||count<0)throw new Error("Invalid count");
+  el.textContent=Math.floor(count).toString().padStart(6,"0");
+  $("volunteer-count").removeAttribute("data-unavailable");
+ }catch(e){
+  el.textContent="—";
+  $("volunteer-count").setAttribute("data-unavailable","true");
+ }
 }
 refreshVolunteerCount();
 $("jf").onsubmit=async function(e){

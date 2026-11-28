@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#081a38">
+<title>THE FUTURE OF SURULERE | The People of Surulere</title>
+<meta name="description" content="A community snapshot of Surulere business listings and volunteer registrations.">
+<style>
+:root{color-scheme:light;--navy:#081a38;--navy2:#12366b;--gold:#b58a3a;--gold2:#d6b46a;--cream:#fbf8f1;--ink:#14233d;--muted:#657187}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6}
+header{background:var(--navy);color:#fff;padding:18px 22px}header .inner,main,footer .inner{max-width:1080px;margin:auto}header a{color:#fff;text-decoration:none;font-weight:700;letter-spacing:.06em;font-size:13px}
+main{padding:26px 22px 72px}.back{display:inline-block;color:var(--navy);text-decoration:none;font-weight:700;margin:8px 0 26px}
+.hero{text-align:center;padding:48px 20px 40px}.eyebrow{color:var(--gold);font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase}
+h1{color:var(--navy);font-size:clamp(35px,7vw,66px);line-height:1.04;letter-spacing:-.045em;margin:12px 0}
+.intro{max-width:650px;margin:0 auto;color:var(--muted);font-size:17px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;margin:26px auto 0;max-width:900px}
+.card{background:#fff;border:1px solid #e7dfcf;border-radius:24px;padding:34px 24px;text-align:center;box-shadow:0 14px 36px rgba(8,26,56,.06)}
+.card .number{display:block;color:var(--gold);font-size:clamp(48px,8vw,76px);line-height:1.08;font-weight:850;letter-spacing:-.055em;font-variant-numeric:tabular-nums}
+.card h2{color:var(--navy);font-size:17px;letter-spacing:.07em;margin:16px 0 7px}
+.card p{color:var(--muted);font-size:14px;margin:0}
+.note{max-width:900px;margin:20px auto 0;color:#77705f;font-size:12px;text-align:center}
+.volunteer{max-width:900px;margin:28px auto 0;padding:26px;border-radius:22px;background:var(--navy);color:#fff;text-align:center}
+.volunteer h2{margin:0 0 6px;font-size:22px}.volunteer p{color:#d8e1ef;margin:0 auto 16px;max-width:620px}
+.volunteer a{display:inline-block;padding:12px 22px;border-radius:99px;background:var(--gold2);color:#201a0d;text-decoration:none;font-weight:800}
+footer{background:#07152d;color:#c5cfdf;padding:22px;text-align:center;font-size:12px}
+@media(max-width:600px){main{padding:18px 16px 52px}.hero{padding:36px 8px 28px}.card{padding:28px 18px}}
+</style>
+</head>
+<body>
+<header><div class="inner"><a href="/">SURULERE FOR CONTINUITY &amp; SUSTAINABILITY</a></div></header>
+<main>
+<a class="back" href="/">← Back to Home</a>
+<section class="hero">
+<div class="eyebrow">Community • Opportunity • Participation</div>
+<h1>THE PEOPLE OF SURULERE</h1>
+<p class="intro">A growing picture of the businesses and people contributing to the life, enterprise and future of Surulere.</p>
+</section>
+<section class="cards" aria-label="Surulere community figures">
+<article class="card">
+<span class="number">3,947</span>
+<h2>BUSINESS DIRECTORY LISTINGS</h2>
+<p>Aggregated listings recorded across business directories covering Surulere.</p>
+</article>
+<article class="card">
+<span class="number" id="volunteer-count" aria-live="polite">Loading…</span>
+<h2>VOLUNTEER REGISTRATIONS</h2>
+<p>Registrations recorded by the website. This figure refreshes automatically.</p>
+</article>
+</section>
+<p class="note">The directory figure represents aggregated listings and may include duplicate entries. It is not a count of unique residents, voters or supporters. Volunteer information is not displayed publicly.</p>
+<section class="volunteer">
+<h2>Be part of Surulere’s future</h2>
+<p>Residents who wish to participate can register voluntarily through the website.</p>
+<a href="/#join">Visit Volunteer Registration</a>
+</section>
+</main>
+<footer><div class="inner">SURULERE FOR CONTINUITY &amp; SUSTAINABILITY</div></footer>
+<script>
+(async function(){
+ const el=document.getElementById("volunteer-count");
+ try{
+  const response=await fetch("/api/count",{headers:{Accept:"application/json"},cache:"no-store"});
+  const data=await response.json();
+  if(!response.ok||!Number.isFinite(Number(data.count)))throw new Error("unavailable");
+  el.textContent=Number(data.count).toLocaleString("en-NG");
+ }catch(e){el.textContent="Currently unavailable";}
+})();
+</script>
+</body>
+</html>

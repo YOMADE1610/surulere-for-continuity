@@ -533,23 +533,61 @@ $("jf").onsubmit=async function(e){
 (function(){
   var gallery=document.getElementById("gallery");
   if(!gallery) return;
-  var slides=Array.prototype.slice.call(gallery.querySelectorAll(".gallery-slide"));
+  var frame=gallery.querySelector(".gallery-frame");
   var counter=document.getElementById("gallery-counter");
-  if(!slides.length) return;
-  var active=0;
+  var note=gallery.querySelector(".gallery-note");
+  var slides=Array.prototype.slice.call(gallery.querySelectorAll(".gallery-slide"));
+  var active=0, timer=null, videoTimer=null;
+  if(!frame || !slides.length) return;
+  function all(){return Array.prototype.slice.call(frame.querySelectorAll(".gallery-slide,.gallery-video"))}
   function showSlide(index){
-    slides.forEach(function(slide,i){
-      var current=i===index;
-      slide.classList.toggle("is-active",current);
-      slide.setAttribute("aria-hidden",current?"false":"true");
+    var items=all();
+    if(!items.length) return;
+    active=(index+items.length)%items.length;
+    items.forEach(function(item,i){
+      var current=i===active;
+      item.classList.toggle("is-active",current);
+      item.setAttribute("aria-hidden",current?"false":"true");
+      if(item.tagName==="VIDEO"){
+        if(current){item.currentTime=0;var p=item.play();if(p&&p.catch)p.catch(function(){});}
+        else {item.pause();item.currentTime=0;}
+      }
     });
-    if(counter) counter.textContent=(index+1)+" / "+slides.length;
+    if(counter) counter.textContent=(active+1)+" / "+items.length;
+    if(timer) window.clearTimeout(timer);
+    if(videoTimer) window.clearTimeout(videoTimer);
+    var current=items[active];
+    var duration=current.tagName==="VIDEO"?Math.min(15000,Math.max(5000,(Number(current.dataset.duration)||5)*1000)):5000;
+    timer=window.setTimeout(function(){showSlide(active+1)},duration);
   }
-  showSlide(active);
-  window.setInterval(function(){
-    active=(active+1)%slides.length;
+  function addMedia(media){
+    if(!Array.isArray(media)) return;
+    media.forEach(function(item){
+      if(!item || typeof item.url!=="string" || !/^https:\/\//i.test(item.url)) return;
+      var el;
+      if(item.type==="video"){
+        el=document.createElement("video");el.className="gallery-slide gallery-video";
+        el.muted=true;el.playsInline=true;el.loop=false;el.preload="metadata";
+        el.src=item.url;el.dataset.duration=String(Number(item.duration)||5);
+        el.setAttribute("aria-label",item.alt||"Campaign video");
+        el.addEventListener("ended",function(){if(all()[active]===el)showSlide(active+1)});
+      }else{
+        el=document.createElement("img");el.className="gallery-slide";
+        el.src=item.url;el.alt=item.alt||"Campaign gallery photograph";
+        el.loading="lazy";el.decoding="async";
+      }
+      frame.insertBefore(el,counter);
+    });
     showSlide(active);
-  },5000);
+  }
+  slides.forEach(function(el){el.classList.remove("is-active")});
+  var first=slides[0];first.classList.add("is-active");
+  showSlide(0);
+  // Additive manifest: new approved media is appended; the existing collection is never replaced.
+  fetch("/gallery/manifest.json",{cache:"no-store"})
+    .then(function(response){if(!response.ok) throw new Error("No gallery manifest yet");return response.json()})
+    .then(function(data){addMedia(data.items||[])})
+    .catch(function(){});
 })();
 </script>
 </body>

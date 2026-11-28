@@ -291,13 +291,23 @@ input,textarea,select{background:#071a30!important;color:#fff!important;border:1
 .reveal{opacity:1!important;transform:none!important;visibility:visible!important}
 .reveal.visible{opacity:1!important;transform:none!important;visibility:visible!important}
 </style>
+<style>
+.photo-gallery{min-height:100svh;padding:34px 0 28px;background:#071a36;color:#fff}
+.gallery-wrap h2{margin-bottom:6px}
+.gallery-frame{position:relative;width:100%;height:min(76svh,820px);min-height:420px;overflow:hidden;border:1px solid rgba(255,255,255,.16);border-radius:18px;background:#030b19;box-shadow:0 18px 55px rgba(0,0,0,.28)}
+.gallery-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .85s ease;display:block}
+.gallery-slide.is-active{opacity:1}
+.gallery-counter{position:absolute;right:16px;bottom:14px;padding:7px 12px;border-radius:30px;background:rgba(3,12,27,.78);color:#fff;font-size:13px;font-weight:700;letter-spacing:.08em;border:1px solid rgba(255,255,255,.2)}
+.gallery-note{margin:12px 0 0;text-align:center;color:#c8d8ee;font-size:13px}
+@media(max-width:640px){.photo-gallery{padding:28px 0 24px}.gallery-frame{height:72svh;min-height:360px;border-radius:12px}.gallery-wrap{padding-left:12px;padding-right:12px}}
+</style>
 </head>
 <body>
 <div id="scroll-progress" aria-hidden="true"></div>
 <div class="disc"><b>Surulere for Continuity and Sustainability</b>: an independent volunteer platform. This is not the official website of Rt. Hon. Femi Gbajabiamila or the APC unless formally endorsed.</div>
 <header>
 <div class="top"><div class="logo apc-mark" aria-label="APC party logo"><svg viewBox="0 0 100 100" role="img" aria-label="APC broom flag"><rect x="2" y="2" width="96" height="96" rx="2" fill="#fff"/><rect x="2" y="2" width="32" height="70" fill="#008751"/><rect x="66" y="2" width="32" height="70" fill="#168bd2"/><path d="M49 12 L56 18 L48 55 L43 55 Z" fill="#a66a2c"/><path d="M39 49 Q50 43 62 50 L67 66 Q51 72 34 65 Z" fill="#d6a33b"/><path d="M39 52 L32 65 M45 50 L40 68 M52 50 L50 69 M59 51 L61 68" stroke="#8c5b24" stroke-width="2"/><rect x="2" y="72" width="96" height="26" fill="#e51c2a"/><text x="50" y="91" font-size="20" font-weight="900" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">APC</text></svg></div><div class="brand"><b style="font-size:15px">ALL PROGRESSIVES CONGRESS</b><small>SURULERE 2027</small></div><button class="join jn" type="button" style="border:0;cursor:pointer;font-family:inherit">Volunteer</button></div>
-<nav class="pills"><a class="on" href="#top">Home</a><a href="#team">Candidates</a><a href="#meet">The Record</a><a href="#library">Projects &amp; Public Service Register<span class="bd" id="cnt1"></span></a><a href="#news">News</a><a href="#join">Volunteer Registration</a></nav>
+<nav class="pills"><a class="on" href="#top">Home</a><a href="#team">Candidates</a><a href="#meet">The Record</a><a href="#gallery">Photo Gallery</a><a href="#library">Projects &amp; Public Service Register<span class="bd" id="cnt1"></span></a><a href="#news">News</a><a href="#join">Volunteer Registration</a></nav>
 </header>
 
 <div id="main"><div class="hero" id="top"><div class="hero-masthead"><div class="hero-kicker">APC · SURULERE 2027</div><h1 class="campaign-title">SURULERE FOR<br><span>CONTINUITY &amp; SUSTAINABILITY</span></h1><div class="hero-rule"></div></div><div class="wrap">
@@ -335,6 +345,28 @@ input,textarea,select{background:#071a30!important;color:#fff!important;border:1
 <div class="car"><button class="arr l" id="pv" aria-label="Previous">‹</button><button class="arr r" id="nx" aria-label="Next">›</button>
 <b id="cb"></b><h3 id="ct"></h3><p id="cp"></p><div class="dots" id="cd"></div></div>
 </div></section>
+
+<section id="gallery" class="photo-gallery">
+  <div class="wrap gallery-wrap">
+    <div class="kick">Surulere · In pictures</div>
+    <h2>Photo Gallery</h2>
+    <p class="lead">Moments, meetings and engagements.</p>
+    <div class="gallery-frame" aria-label="Automatically rotating photo gallery">
+      <img class="gallery-slide is-active" src="https://uq6mjwfswfy3kpeb.public.blob.vercel-storage.com/gallery/photo-01.jpg" alt="Campaign gallery photograph 1" loading="eager" decoding="async">
+      <img class="gallery-slide" src="https://uq6mjwfswfy3kpeb.public.blob.vercel-storage.com/gallery/photo-02.jpg" alt="Campaign gallery photograph 2" loading="eager" decoding="async">
+      <img class="gallery-slide" src="https://uq6mjwfswfy3kpeb.public.blob.vercel-storage.com/gallery/photo-03.jpg" alt="Campaign gallery photograph 3" loading="eager" decoding="async">
+      <img class="gallery-slide" src="https://uq6mjwfswfy3kpeb.public.blob.vercel-storage.com/gallery/photo-04.jpg" alt="Campaign gallery photograph 4" loading="eager" decoding="async">
+      <img class="gallery-slide" src="https://uq6mjwfswfy3kpeb.public.blob.vercel-storage.com/gallery/photo-05.jpg" alt="Campaign gallery photograph 5" loading="eager" decoding="async">
+      <img class="gallery-slide" src="https://uq6mjwfswfy3kpeb.public.blob.vercel-storage.com/gallery/photo-06.jpg" alt="Campaign gallery photograph 6" loading="eager" decoding="async">
+      <img class="gallery-slide" src="https://uq6mjwfswfy3kpeb.public.blob.vercel-storage.com/gallery/photo-07.jpg" alt="Campaign gallery photograph 7" loading="eager" decoding="async">
+      <img class="gallery-slide" src="https://uq6mjwfswfy3kpeb.public.blob.vercel-storage.com/gallery/photo-08.jpg" alt="Campaign gallery photograph 8" loading="eager" decoding="async">
+      <img class="gallery-slide" src="https://uq6mjwfswfy3kpeb.public.blob.vercel-storage.com/gallery/photo-09.jpg" alt="Campaign gallery photograph 9" loading="eager" decoding="async">
+      <img class="gallery-slide" src="https://uq6mjwfswfy3kpeb.public.blob.vercel-storage.com/gallery/photo-10.jpg" alt="Campaign gallery photograph 10" loading="eager" decoding="async">
+      <div class="gallery-counter" id="gallery-counter" aria-live="off">1 / 10</div>
+    </div>
+    <p class="gallery-note">Images change automatically every five seconds.</p>
+  </div>
+</section>
 
 <section id="library" style="padding-top:10px"><div class="wrap">
 <div class="kick">Structured record</div>
@@ -473,6 +505,29 @@ $("jf").onsubmit=async function(e){
  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}})},{threshold:.08,rootMargin:'0px 0px -30px 0px'});targets.forEach(function(el){io.observe(el)})}else{targets.forEach(function(el){el.classList.add('visible')})}
 })();
 
+</script>
+<script>
+(function(){
+  var gallery=document.getElementById("gallery");
+  if(!gallery) return;
+  var slides=Array.prototype.slice.call(gallery.querySelectorAll(".gallery-slide"));
+  var counter=document.getElementById("gallery-counter");
+  if(!slides.length) return;
+  var active=0;
+  function showSlide(index){
+    slides.forEach(function(slide,i){
+      var current=i===index;
+      slide.classList.toggle("is-active",current);
+      slide.setAttribute("aria-hidden",current?"false":"true");
+    });
+    if(counter) counter.textContent=(index+1)+" / "+slides.length;
+  }
+  showSlide(active);
+  window.setInterval(function(){
+    active=(active+1)%slides.length;
+    showSlide(active);
+  },5000);
+})();
 </script>
 </body>
 </html>

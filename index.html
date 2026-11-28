@@ -577,14 +577,14 @@ $("jf").onsubmit=async function(e){
         el.src=item.url;el.alt=item.alt||"Campaign gallery photograph";
         el.loading="lazy";el.decoding="async";
       }
-      frame.insertBefore(el,counter);
+      frame.insertBefore(el,first);
     });
     showSlide(active);
   }
   slides.forEach(function(el){el.classList.remove("is-active")});
   var first=slides[0];first.classList.add("is-active");
   showSlide(0);
-  // Additive manifest: new approved media is appended; the existing collection is never replaced.
+  // Priority manifest: new approved media is inserted before the original gallery; all existing photos remain after it.
   fetch("/gallery/manifest.json",{cache:"no-store"})
     .then(function(response){if(!response.ok) throw new Error("No gallery manifest yet");return response.json()})
     .then(function(data){addMedia(data.items||[])})
